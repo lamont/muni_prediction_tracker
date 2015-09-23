@@ -13,4 +13,7 @@ require 'muni'
 
 the_N = Muni::Route.find('N')
 
-puts the_N.inbound.stop_at("Sunset Tunnel East Portal").predictions.first.minutes
+# array of all stops
+# the_N.directions.first.stops.map { |s| s.title }
+
+puts "N inbound in #{the_N.inbound.stop_at("Sunset Tunnel East Portal").predictions.first.minutes} minutes"
