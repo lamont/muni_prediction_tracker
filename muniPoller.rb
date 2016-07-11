@@ -1,4 +1,4 @@
-#!/bin/env ruby
+#!/usr/bin/env ruby
 
 # want to report on
 #  N inbound "Sunset Tunnel East Portal"
@@ -11,7 +11,6 @@ require 'muni'
 require 'httparty'
 require 'json'
 
-url = 'https://data-engine-192-168-178-47.jutdata.io:3110/api/v1/import/webhook/?space=muni&data_source=nextbus_webhook&apikey=2Lols63-U3ze&field_connector=webhook&field_data_source=nextbus_webhook'
 
 stops = [
   ['N','inbound','Sunset Tunnel East Portal' ],
@@ -28,9 +27,9 @@ stops.each do |entry|
       Muni::Route.find(r).direction_at(d).stop_at(s).predictions.first.minutes.to_i
 end
 
-# puts predictions.to_json
+puts predictions.to_json
 
-response = HTTParty.post(url, body: predictions.to_json, :headers => { 'Content-Type' => 'application/json' } )
+# response = HTTParty.post(url, body: predictions.to_json, :headers => { 'Content-Type' => 'application/json' } )
 
 # puts response.body
 # puts response.message
