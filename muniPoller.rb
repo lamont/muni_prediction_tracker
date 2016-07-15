@@ -8,9 +8,9 @@
 
 require 'rubygems'
 require 'muni'
-require 'httparty'
+#require 'httparty'
 require 'json'
-
+require 'prometheus/client'
 
 stops = [
   ['N','inbound','Sunset Tunnel East Portal' ],
@@ -20,13 +20,17 @@ stops = [
 ]
 
 predictions = {}
+prom = Prometheus::Client.registry
+routes = Prometheus::Client::Gauge.new(:muni_eta_minutes, 'Minutes till next bus')
 
 stops.each do |entry|
   r,d,s = entry
-  predictions[entry.join('-').gsub(' ','_')] =
-      Muni::Route.find(r).direction_at(d).stop_at(s).predictions.first.minutes.to_i
+  min = Muni::Route.find(r).direction_at(d).stop_at(s).predictions.first.minutes.to_i
+  predictions[entry.join('-').gsub(' ','_')] = min
+  routes.set({route: r, direction: d, stop: s}, min )
 end
 
+routes.set({line: 'N', direction: 'Outbound'}, 5)
 puts predictions.to_json
 
 # response = HTTParty.post(url, body: predictions.to_json, :headers => { 'Content-Type' => 'application/json' } )
