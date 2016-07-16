@@ -9,6 +9,7 @@ require 'prometheus/client'
 require 'prometheus/client/formats/text'
 require 'rack'
 
+set :bind, '0.0.0.0'
 set :port, 5000
 use Rack::Deflater, if: ->(env, status, headers, body) { body.any? && body[0].length > 512 }
 
