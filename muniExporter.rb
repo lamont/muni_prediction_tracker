@@ -30,8 +30,8 @@ get '/metrics' do
   stops.each do |entry|
     r,d,s = entry
     soon, later = Muni::Route.find(r).direction_at(d).stop_at(s).predictions[0,2].map {|t| t.minutes.to_i}
-    routes.set({route: r, direction: d, stop: s, ordinal: 'first'}, soon )
-    routes.set({route: r, direction: d, stop: s, ordinal: 'second'}, later )
+    routes.set({route: r, direction: d, stop: s, ordinal: 'first'}, soon ) unless soon.nil?
+    routes.set({route: r, direction: d, stop: s, ordinal: 'second'}, later ) unless later.nil?
   end
 
   Prometheus::Client::Formats::Text.marshal(prom)
